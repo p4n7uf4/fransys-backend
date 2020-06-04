@@ -28,15 +28,25 @@ const getPatientById = (req, res) => {
 const createPatient = (req, res) => {
     const { name, birthDate, endereco, telephone, anamnese } = req.body
 
-    pool.query('insert into pacientes (nome, dataNascimento, endereco, telefone, anamnese) values ($1, $2, $3, $4, $5)', 
+    pool.query('insert into pacientes (nome, dataNascimento, endereco, telefone, anamnase) values ($1, $2, $3, $4, $5)', 
         [name, birthDate, endereco, telephone, anamnese], (error, results) => {
             if (error) throw error
             res.status(201).send(`Paciente adicionado com ID: ${results.insertId}`)
         })
 }
 
+const deletePatient = (req, res) => {
+    const id = parseInt(req.params.id)
+    pool.query('DELETE FROM pacientes WHERE id = $1', [id], (error, result) => {
+        if (error) throw error
+        console.log(`Paciente com o ID ${req.params.id} excluido com sucesso.`)
+        res.send(`Paciente com o ID ${req.params.id} exluido com sucesso.`)
+    })
+}
+
 module.exports = {
     getAllPatients,
     getPatientById,
-    createPatient
+    createPatient,
+    deletePatient
 }
